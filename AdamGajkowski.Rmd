@@ -1,0 +1,75 @@
+---
+title: "Automated Stock Trading with R"
+author: "W. Claster"
+date: "4/8/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. Setup
+
+I use the following API’s
+Google Cloud Platform
+Robinhood
+Yahoo Finance
+
+To create the pipeline, I used the R Markdown document. I use these libraries to manipulate financial data.
+
+```{r cars}
+library(dplyr)
+library(purrr)
+library(dbplyr)
+```
+RobinHood library interacts with Robinhood accounts. Quantmod library allows to interact with yahoo finance data and includes useful libraries for technical analysis.
+```
+library(RobinHood)
+library(quantmod)
+```
+I use googlesheets4, big query and DBI to interact with databases, which are based on Google Cloud services.
+
+```
+library(googlesheets4)
+library(bigrquery)
+library(DBI)
+```
+The library here is used to access local R scripts with defined functions
+
+library(here)
+source(here("src", "R", "data_functions.R"))
+source(here("src", "R", "trading_models.R"))```
+
+```
+
+
+## 2. Connecting API’s
+
+I set the billing to my project and make a connection with Google’s API using .json file.
+
+```{r auth, echo=FALSE}
+
+gs4_auth(
+path = "google_auth.json",
+cache = FALSE
+)
+```
+Inside .Rprofile I set the following variables for sys environment.
+# Put that inside .Rprofile system file
+Sys.setenv("username" = "adam")
+Sys.setenv("password" = "test")
+And then make a connection with RobinHood API’s. .Rprofile file passes relevant credentials defined above.
+
+##3. Gathering data and making decision
+I then gather all relevant data using Yahoo Finance API.
+
+```
+# This function is located in data_functions.R script
+get_market_data <- function() {
+ # Load data into the workspace
+ getSymbols("AAPL", src="yahoo")
+ return(AAPL)
+}
+data <- get_market_data()
+```
