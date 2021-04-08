@@ -1,4 +1,4 @@
-library(usethis) 
+#library(usethis) 
 #use_git_config(user.name = "DataScienceProjectsJapan", user.email = "wclaster@apu.ac.jp")
 
 
@@ -17,3 +17,11 @@ table <- html_table(html_nodes(website, "table")[[4]], fill = TRUE)
 stocks.symbols<-table$X2
 stocks.names<-table$X3
 
+table1<-table[-1,-1]
+
+
+colnames(table1)<-table[1,-1]
+
+
+
+DT::datatable(table1)
